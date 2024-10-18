@@ -12,14 +12,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vibutsx.nexivusSpring.dto.LoginDto;
-
+import com.vibutsx.nexivusSpring.entity.UserEntity;
 import com.vibutsx.nexivusSpring.security.JwtUtil;
-
+import com.vibutsx.nexivusSpring.service.UserService;
 
 @RestController
 public class AuthController {
 
-   
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -28,12 +29,22 @@ public class AuthController {
     private JwtUtil jwtUtils;
 
     
-    
+    @SuppressWarnings("unused")
     @PostMapping("/auth/login")
     public String login(@RequestBody LoginDto user) {
 
-       
-            
+        List<UserEntity> users = userService.getAll();
+
+        if (users.isEmpty()) {
+            //------------------------Application Configure Purpose------------------------
+            UserEntity admin = new UserEntity();
+            admin = new UserEntity();
+            admin.setUsername("admin");
+            admin.setPassword("admin123");
+            admin.setFullname("Admin Admin");
+            UserEntity newuser = userService.create(admin);
+            newuser = null;
+            //-----------------------------------------------------------------------------
 
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
@@ -44,8 +55,18 @@ public class AuthController {
 
             return jwtToken;
 
-       
-        
+        } else {
+
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            String jwtToken = jwtUtils.generateJwtToken(authentication);
+
+            return jwtToken;
+
+        }
 
     }
 }
