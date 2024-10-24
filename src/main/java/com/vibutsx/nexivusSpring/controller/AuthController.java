@@ -38,7 +38,6 @@ public class AuthController {
         if (users.isEmpty()) {
             //------------------------Application Configure Purpose------------------------
             UserEntity admin = new UserEntity();
-            admin = new UserEntity();
             admin.setUsername("admin");
             admin.setPassword("admin123");
             admin.setFullname("Admin Admin");

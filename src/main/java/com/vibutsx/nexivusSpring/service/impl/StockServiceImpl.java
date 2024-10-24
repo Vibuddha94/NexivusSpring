@@ -59,5 +59,18 @@ public class StockServiceImpl implements StockService{
     public StockEntity getByItem(ItemEntity entity) {
         return stockRepository.findByItem(entity).orElse(null);
     }
+
+    @Override
+    public StockEntity updateStock(Long id, Long qty) {
+        
+        StockEntity exStok = stockRepository.findById(id).orElse(null);
+
+        if ( exStok == null) {
+            return null;
+        } else {
+            exStok.setQoh(qty);
+            return stockRepository.save(exStok);
+        }
+    }
     
 }

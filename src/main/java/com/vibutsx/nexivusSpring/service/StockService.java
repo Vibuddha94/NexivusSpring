@@ -13,5 +13,6 @@ public interface StockService {
     List<StockEntity> getAll();
     StockEntity addToStock(Long id, Long qty);
     StockEntity getFromStock(Long id, Long qty);
+    StockEntity updateStock(Long id, Long qty);
     StockEntity getByItem(ItemEntity entity);
 }

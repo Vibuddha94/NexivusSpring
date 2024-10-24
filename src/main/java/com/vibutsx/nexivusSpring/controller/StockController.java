@@ -34,14 +34,14 @@ public class StockController {
     }
 
     @PostMapping("/stock")
-    public ResponseEntity<StockEntity> create(@RequestBody StockDto dto) {
+    public ResponseEntity<StockEntity> create(@RequestBody StockDto dto) {  //here dto.id is item id
 
         StockEntity newStock = new StockEntity();
 
-        if (itemService.getById(dto.getItemId()) == null) {
+        if (itemService.getById(dto.getId()) == null) {
             return ResponseEntity.status(404).body(null);
         } else {
-            newStock.setItem(itemService.getById(dto.getItemId()));
+            newStock.setItem(itemService.getById(dto.getId()));
             newStock.setQoh(dto.getQty());
 
             if (stockService.getByItem(newStock.getItem()) == null) {
@@ -53,11 +53,11 @@ public class StockController {
         }
     }
 
-    @PutMapping("stock/addto")
-    public ResponseEntity<List<StockEntity>> addToStock(@RequestBody List<StockDto> dtos) {
+    @PutMapping("/stock/addto")
+    public ResponseEntity<List<StockEntity>> addToStock(@RequestBody List<StockDto> dtos) { // here dto.id is stock id
         List<StockEntity> updatedList = new ArrayList<>();
         for (StockDto stockDto : dtos) {
-            StockEntity updated = stockService.addToStock(stockDto.getItemId(), stockDto.getQty());
+            StockEntity updated = stockService.addToStock(stockDto.getId(), stockDto.getQty());
             if (updated != null) {
                 updatedList.add(updated);
             } 
@@ -65,15 +65,27 @@ public class StockController {
         return ResponseEntity.status(201).body(updatedList);
     }
 
-    @PutMapping("stock/getfrom")
+    @PutMapping("/stock/getfrom")
     public ResponseEntity<List<StockEntity>> getFromStock(@RequestBody List<StockDto> dtos) {
         List<StockEntity> updatedList = new ArrayList<>();
         for (StockDto stockDto : dtos) {
-            StockEntity updated = stockService.getFromStock(stockDto.getItemId(), stockDto.getQty());
+            StockEntity updated = stockService.getFromStock(stockDto.getId(), stockDto.getQty());
             if (updated != null) {
                 updatedList.add(updated);
             } 
         }
         return ResponseEntity.status(201).body(updatedList);
+    }
+
+    @PutMapping("/stock")
+    public ResponseEntity<StockEntity> updateStock(@RequestBody StockDto dto) {
+        
+        StockEntity updatedStock = stockService.updateStock(dto.getId(), dto.getQty());
+
+        if (updatedStock == null) {
+            return ResponseEntity.status(404).body(null);
+        } else {
+            return ResponseEntity.status(200).body(updatedStock);
+        }
     }
 }
