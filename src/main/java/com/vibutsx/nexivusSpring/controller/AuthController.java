@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vibutsx.nexivusSpring.dto.AuthReturnDto;
 import com.vibutsx.nexivusSpring.dto.LoginDto;
 import com.vibutsx.nexivusSpring.entity.UserEntity;
 import com.vibutsx.nexivusSpring.security.JwtUtil;
@@ -31,7 +32,7 @@ public class AuthController {
     
     @SuppressWarnings("unused")
     @PostMapping("/auth/login")
-    public String login(@RequestBody LoginDto user) {
+    public AuthReturnDto login(@RequestBody LoginDto user) {
 
         List<UserEntity> users = userService.getAll();
 
@@ -53,7 +54,10 @@ public class AuthController {
 
             String jwtToken = jwtUtils.generateJwtToken(authentication);
 
-            return jwtToken;
+            AuthReturnDto dto = new AuthReturnDto();
+            dto.setJwtToken(jwtToken);
+            dto.setUsertype(userService.getByUsername(user.getUsername()).getUserType());
+            return dto;
 
         } else {
 
@@ -64,7 +68,10 @@ public class AuthController {
 
             String jwtToken = jwtUtils.generateJwtToken(authentication);
 
-            return jwtToken;
+            AuthReturnDto dto = new AuthReturnDto();
+            dto.setJwtToken(jwtToken);
+            dto.setUsertype(userService.getByUsername(user.getUsername()).getUserType());
+            return dto;
 
         }
 
