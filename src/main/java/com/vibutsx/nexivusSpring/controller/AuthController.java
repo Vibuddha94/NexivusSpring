@@ -41,6 +41,7 @@ public class AuthController {
             admin.setUsername("admin");
             admin.setPassword("admin123");
             admin.setFullname("Admin Admin");
+            admin.setUserType("admin");
             UserEntity newuser = userService.create(admin);
             newuser = null;
             //-----------------------------------------------------------------------------

@@ -42,10 +42,11 @@ public class UserServiceImpl implements UserService {
         if (exUser == null) {
             return null;
         } else {
+            entity.setPassword(passwordEncoder.encode(entity.getPassword()));
             exUser.setUsername(entity.getUsername());
             exUser.setPassword(entity.getPassword());
             exUser.setFullname(entity.getFullname());
-
+            exUser.setUserType(entity.getUserType());
             return userRepository.save(exUser);
         }
     }
